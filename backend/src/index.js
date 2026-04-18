@@ -53,10 +53,8 @@ const initDB = async () => {
       });
       console.log('Default Admin Account Created: admin@example.com / admin123');
     }
-
   } catch (err) {
-    console.error('Database Initialization Failed:', err.message);
-    process.exit(1);
+    console.error('Database Initialization Warning:', err.message);
   }
 };
 
