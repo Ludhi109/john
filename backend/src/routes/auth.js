@@ -7,7 +7,8 @@ const { v4: uuidv4 } = require('uuid');
 
 // @route   POST api/auth/register
 router.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body;
+  let { name, email, password, role } = req.body;
+  email = email.toLowerCase().trim();
 
   try {
     // 1. Check if user exists
@@ -43,7 +44,8 @@ router.post('/register', async (req, res) => {
 
 // @route   POST api/auth/login
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+  email = email.toLowerCase().trim();
 
   try {
     const result = await db.execute({
