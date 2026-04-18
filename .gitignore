@@ -38,3 +38,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Local Node distribution
+backend/node/
