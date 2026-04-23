@@ -65,14 +65,18 @@ export default function AdminDashboard() {
       const payload = { title, description, duration, attemptLimit, randomize, enableSecurity };
       if (editingExamId) {
         await api.put(`/admin/exams/${editingExamId}`, payload);
+        alert('Exam updated successfully!');
       } else {
         await api.post('/admin/exams', payload);
+        alert('Exam created successfully!');
       }
       setShowModal(false);
       resetForm();
       fetchExams();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      const message = err.response?.data?.message || err.message || 'Unknown error';
+      alert(`Error: ${message}`);
     }
   };
 
