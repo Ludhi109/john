@@ -96,13 +96,17 @@ export default function QuestionManager({ examId, examTitle, onClose }: Props) {
     try {
       if (editingId) {
         await api.put(`/admin/questions/${editingId}`, payload);
+        alert('Question updated successfully!');
       } else {
         await api.post('/admin/questions', payload);
+        alert('Question added successfully!');
       }
       fetchQuestions();
       resetForm();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      const message = err.response?.data?.message || err.message || 'Unknown error occurred';
+      alert(`Error: ${message}`);
     }
   };
 

@@ -87,8 +87,9 @@ router.post('/exams', async (req, res) => {
     });
     res.json({ _id: id, title, description, duration, attemptLimit, randomize, enableSecurity });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -98,8 +99,9 @@ router.get('/exams', async (req, res) => {
     const result = await db.execute('SELECT * FROM exams ORDER BY created_at DESC');
     res.json(result.rows.map(mapExam));
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -113,8 +115,9 @@ router.put('/exams/:id', async (req, res) => {
     });
     res.json({ message: 'Exam updated' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -124,8 +127,9 @@ router.delete('/exams/:id', async (req, res) => {
     await db.execute({ sql: 'DELETE FROM exams WHERE id = ?', args: [req.params.id] });
     res.json({ message: 'Exam deleted' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -142,8 +146,9 @@ router.get('/questions/:examId', async (req, res) => {
     }));
     res.json(questions);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -154,12 +159,23 @@ router.post('/questions', async (req, res) => {
     const id = uuidv4();
     await db.execute({
       sql: 'INSERT INTO questions (id, exam_id, type, content, options, answer, points, test_cases, keywords) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      args: [id, examId, type, content, JSON.stringify(options), answer, points, JSON.stringify(testCases), JSON.stringify(keywords)]
+      args: [
+        id, 
+        examId, 
+        type, 
+        content, 
+        options ? JSON.stringify(options) : null, 
+        answer, 
+        points, 
+        testCases ? JSON.stringify(testCases) : null, 
+        keywords ? JSON.stringify(keywords) : null
+      ]
     });
     res.json({ _id: id, content, type });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -169,12 +185,22 @@ router.put('/questions/:id', async (req, res) => {
     const { type, content, options, answer, points, testCases, keywords } = req.body;
     await db.execute({
       sql: 'UPDATE questions SET type = ?, content = ?, options = ?, answer = ?, points = ?, test_cases = ?, keywords = ? WHERE id = ?',
-      args: [type, content, JSON.stringify(options), answer, points, JSON.stringify(testCases), JSON.stringify(keywords), req.params.id]
+      args: [
+        type, 
+        content, 
+        options ? JSON.stringify(options) : null, 
+        answer, 
+        points, 
+        testCases ? JSON.stringify(testCases) : null, 
+        keywords ? JSON.stringify(keywords) : null, 
+        req.params.id
+      ]
     });
     res.json({ message: 'Question updated' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -184,8 +210,9 @@ router.delete('/questions/:id', async (req, res) => {
     await db.execute({ sql: 'DELETE FROM questions WHERE id = ?', args: [req.params.id] });
     res.json({ message: 'Question deleted' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -244,8 +271,9 @@ router.get('/analytics/:examId', async (req, res) => {
       scoreDistribution: distribution
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 // @route   GET api/admin/results
@@ -271,8 +299,9 @@ router.get('/results', async (req, res) => {
 
     res.json(formatted);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -322,8 +351,9 @@ router.get('/results/:id', async (req, res) => {
       createdAt: r.start_time
     });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
@@ -337,8 +367,9 @@ router.patch('/results/:id/grade', async (req, res) => {
     });
     res.json({ message: 'Score updated successfully' });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+    console.error('--- QUESTION POST ERROR ---');
+    console.error(err);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
